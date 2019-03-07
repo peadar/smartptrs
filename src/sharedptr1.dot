@@ -1,0 +1,25 @@
+digraph G {
+    graph [rankdir = LR,
+          bgcolor=transparent,
+          fontname="monospace"
+    ];
+
+    node[shape=record,
+       fillcolor="#808020",
+       style="filled",
+       fontname="monospace"
+    ];
+
+    shared_ptr[label="SharedPtr\<Foo\>|{<object>ptr|<control>ref}"]
+    shared_ptr2[label="SharedPtr\<Foo\>|{<object>ptr|<control>ref}"]
+
+    control[label="<ctrl>Refcount\<Foo\>|{count=2}"];
+    object[label="<foo>Foo|{fields|in|foo}"]
+
+    shared_ptr:object -> object:foo;
+    shared_ptr2:object -> object:foo;
+
+    shared_ptr:control -> control:ctrl;
+    shared_ptr2:control -> control:ctrl;
+
+}

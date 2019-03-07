@@ -1,0 +1,30 @@
+digraph G {
+    graph [rankdir = LR,
+          bgcolor=transparent,
+          fontname="monospace"
+    ];
+
+    node[shape=record,
+       fillcolor="#808020",
+       style="filled",
+       fontname="monospace"
+    ];
+
+    shared_ptr[label="std::shared_ptr\<Derived\>|{<object>_M_ptr|<control>_M_refcount._M_pi}"]
+    shared_ptr2[label="std::shared_ptr\<Base\>|{<object>_M_ptr|<control>_M_refcount._M_pi}"]
+
+    control[label="<ctrl>_Sp_counted_ptr\<Derived\>|{<vptr>vptr|_M_use_count=2|_M_weakcount=1|<ptr>_M_ptr}"]
+    object[label="<derived>Derived|{fields|in|Derived}"]
+
+
+    vtable[label="vtable for _Sp_counted_ptr\<Derived\>|{destructor for Derived}"]
+
+    shared_ptr:object -> object:derived;
+    shared_ptr:control -> control:ctrl;
+    shared_ptr2:object -> object:derived;
+    shared_ptr2:control -> control:ctrl;
+
+    control:ptr -> object:derived;
+    control:vptr -> vtable
+
+}

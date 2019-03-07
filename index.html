@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Smart Pointers in C++</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" href="extern/reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="extern/reveal.js/css/theme/black.css">
+        <link rel="stylesheet" href="extern/reveal.js/lib/css/zenburn.css">
+        <link rel="stylesheet" href="local.css">
+    </head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+
+                <section>
+                   <h1>Overview of smart pointers</h1>
+                   <i>Peter Edwards, Arista Networks</i>
+                   <br>
+                   <ul>
+                   <li class="fragment">Concepts</li>
+                   <li class="fragment">As applied in std::shared_ptr et al</li>
+                   </ul>
+                </section>
+
+                <section>
+
+                   <section>
+                      <h2>Basics</h2>
+                      <div class="left-pane">
+                         <pre class="fragment"><code class="cpp" data-external="src/foo.h.quoted"> </code></pre>
+                         <pre class="fragment"><code class="cpp">
+auto foo = new Foo();
+// ... stuff
+delete foo
+                         </code></pre>
+                      </div>
+                      <div class="right-pane">
+                         <p class="fragment"> TL;DR: "raw" C++ memory management is hard.</p>
+                      </div>
+                  </section>
+                  <section>
+                      <div class="left-pane">
+                         <p>We can use RAII to create "scoped" pointers</p>
+                         <pre class="fragment" data-fragment-index="1"><code class="cpp" data-external="src/scopedptr.h.quoted"> </code></pre>
+                         <p class="fragment" data-fragment-index="4">Only allows one managed "reference" to object</p>
+                      </div><div class="right-pane">
+                         <pre class="fragment" data-fragment-index="2"><code class="cpp" data-external="src/ex-scopedptr.cc.quoted"> </code></pre>
+                         <pre class="fragment" data-fragment-index="3"><code data-external="src/ex-scopedptr.out"> </code></pre>
+                      </div>
+                   </section>
+
+                   <section>
+                       <h2>std::auto_ptr</h2>
+                       <div class="left-pane fragment">
+                           <p>std::auto_ptr had weird copy semantics</p>
+                           <pre><code class="cpp" data-external="src/ex-autoptr-assign.cc.quoted"> </code></pre>
+                       </div>
+                       <div class="right-pane fragment">
+                           <p> ... Compiles, but....</p>
+                           <pre><code data-external="src/ex-autoptr-assign.out"> </code></pre>
+                       </div>
+                   </section>
+
+                   <section>
+                       <h2>std::unique_ptr</h2>
+                       <div>
+                           <div class="left-pane fragment">
+                               <pre><code class="cpp" data-external="src/ex-uniqueptr-assign.cc.quoted"> </code></pre>
+                               <p>unique_ptr explicitly prevents you doing something like that...</p>
+                           </div>
+
+                           <div class="right-pane fragment">
+                               <pre><code class="cpp" data-external="src/ex-uniqueptr-assign.compile-errs.quoted"> </code></pre>
+
+                               <div class="fragment">
+                                   <p>Don't use auto-ptr, it's broken
+                                   <p>unique_ptr is more useful, but still has obvious restrictions</p>
+                               </div>
+                           </div>
+                       </div>
+                   </section>
+
+                   <section>
+                       <h2>Intrusive Reference counting</h2>
+                       <div class="left-pane">
+                           <ul>
+                               <li class="fragment"> put a reference count in every object</li>
+                               <li class="fragment"> increment refcount for each reference we create</li>
+                               <li class="fragment"> decrement refcount for each reference we destroy</li>
+                               <li class="fragment"> delete object when refcount hits 0</li>
+                           </ul>
+                       </div>
+                       <div class="right-pane">
+                           <pre class="fragment"><code class="cpp" data-external="src/refcount.h.quoted"> </code></pre>
+                       </div>
+                   </section>
+
+                   <section>
+                       <h2>Intrusive Reference Counting - ctd</h2>
+                       <div class="left-pane">
+                           <pre class="fragment"><code class="cpp" data-external="src/ex-refcount.cc.quoted"> </code></pre>
+                       </div>
+                       <div class="right-pane">
+                           <pre class="fragment"><code data-external="src/ex-refcount.out"> </code></pre>
+                       </div>
+                   </section>
+
+                   <section>
+                      <h2>Intrusive Reference Counting - Summary </h2>
+                      <ul>
+                          <li>This is actually a workable system, if you can deal with the "intrusive" bit</li>
+                          <li class="fragment">boost has boost::intrusive_ptr</li>
+                          <li class="fragment">The Python interpreter uses this, along with mark/sweep style GC.
+                                          (see PyObject's ob_refcnt)</li>
+                          <li class="fragment">... lots of examples... linux kernel, C++ frameworks, etc </li>
+                          <li class="arista fragment">
+                             this is also exactly how TACC refcounting works.
+                             <ul>
+                             <li class="fragment">all tacc objects that have refcounts inherit from <code>VFPtrInterface</code>, which
+                         contains a union consisting of <code>atomicRefAndFlags_</code> or <code>nonAtomicRefAndFlags_</code></li>
+                             <li class="fragment">Tac::Ptr is essentially similar to our type above.</li>
+                             </ul>
+                          </li>
+                      </ul>
+                   </section>
+
+                   <section>
+                       <h2>Non-intrusive Reference Counting</h2>
+                       <div class="left-pane">
+                           <ul>
+                               <li class="fragment" data-fragment-index="1">put reference count in a separate object to the resource-tracked object</li>
+                               <li class="fragment" data-fragment-index="2">(almost) any type can therefore be managed by such a smart pointer</li>
+                           </ul>
+                           <img alt="sharedptr diagram" class="fragment" style="width:90%;border:0px;" data-fragment-index="4" src="src/sharedptr1.svg">
+                       </div>
+                       <div class="right-pane">
+                           <pre class="fragment" data-fragment-index="3"><code class="cpp" data-external="src/simpleshared.h.quoted"></code></pre>
+                       </div>
+                   </section>
+
+                   <section>
+                       <h2>Non-intrusive Reference Counting - ctd </h2>
+                       <div class="left-pane">
+                           <pre class="fragment"><code class="cpp" data-external="src/ex-simpleshared.cc.quoted"></code></pre>
+                       </div>
+                       <div class="right-pane">
+                           <pre class="fragment"><code data-external="src/ex-simpleshared.out"></code></pre>
+                       </div>
+                   </section>
+
+                   <section>
+                       <h2>Non-intrusive Reference Counting - Summary </h2>
+                       <ul>
+                           <li class="fragment">nominally requires extra heap allocation</li>
+                           <li class="fragment">more expensive to pass around (two pointers instead of one)</li>
+                           <li class="fragment">If you try, you can create unrelated control blocks for the same pointer...</li>
+                       </ul>
+                       <div class="left-pane">
+                           <pre class="fragment"><code class="cpp" data-external="src/bad-simpleshared.cc.quoted"></code></pre>
+                       </div>
+                       <div class="right-pane">
+                           <pre class="fragment"><code data-external="src/bad-simpleshared.out"></code></pre>
+                       </div>
+                   </section>
+
+                </section>
+
+                <section>
+                   <h1>std::shared_ptr</h1>
+                   <section>
+                       <div class="fragment left-pane">
+                           <p>Our SharedPtr is obviously a simplification, but it is conceptually similar to how std::shared_ptr works:</p>
+                           <pre><code class="cpp" data-external="src/ex-sharedptr.cc.quoted"></code></pre>
+                       </div>
+                       <div class="fragment right-pane">
+                           <pre><code data-external="src/ex-sharedptr.out"></code></pre>
+                           <img class="fragment" alt="sharedptr picture" style="width:90%;border:0px;" src="src/stdsharedptr.svg">
+                       </div>
+                   </section>
+
+                   <section>
+                       <p>We can see the memory allocation for ourselves...</p>
+                       <div class="left-pane">
+                           <pre class="fragment"><code class="cpp" data-external="src/operatornew.h.quoted"></code></pre>
+                       </div>
+                       <div class="right-pane">
+                           <pre><code class="cpp fragment" data-external="src/ex-makeshared.cc.quoted"></code></pre>
+                           <pre><code class="fragment" data-external="src/ex-makeshared.out"></code></pre>
+                       </div>
+
+                   </section>
+
+                   <section>
+                       <div class="left-pane">
+                           <p>We can use std::make_shared to improve matters</p>
+                           <pre><code class="cpp" data-external="src/ex-makeshared2.cc.quoted"></code></pre>
+                       </div>
+                       <div class="right-pane fragment">
+                           <p>Using make_shared, we get this:</p>
+                           <pre><code data-external="src/ex-makeshared2.out"></code></pre>
+                           <img class="fragment" alt="makeshared picture" style="width:90%;border:0px;" src="src/makeshared.svg">
+                       </div>
+                   </section>
+
+                   <section>
+                       <h2>shared_from_this</h2>
+                      <div class="left-pane">
+                          <p class="fragment" data-fragment-index="1">What happens if a member function needs to pass "this" as a shared_ptr to some function/method?</p>
+                          <p class="fragment" data-fragment-index="3">note this <b>requires</b> that the type already has a shared pointer referring to it. (Our second call to <code>Foo::m</code> is invalid)</p>
+                          <pre class="fragment" data-fragment-index="4"><code data-external="src/ex-sharedfromthis.out" class="cpp"> </code></pre>
+                      </div>
+                      <div class="right-pane">
+                          <pre class="fragment" data-fragment-index="2"><code data-external="src/ex-sharedfromthis.cc.quoted" class="cpp"> </code></pre>
+                      </div>
+                   </section>
+
+                </section>
+
+                <section>
+                   <h1>std::weak_ptr</h1>
+
+                   <section>
+                       <ul>
+                           <li class="fragment">Like a "raw" pointer, but "safe". Object can be deleted while the weak pointer exists</li>
+                           <li class="fragment"> Try to convert to a <code>shared_ptr</code> - works if and only if the object has not yet been deleted.</li>
+                           <li class="fragment">Can be used to prevent reference loops, etc.</li>
+                       </ul>
+                       <div class="fragment">
+                           <div class="left-pane">
+                               <pre><code class="cpp" data-external="src/ex-weakptr.cc.quoted"></code></pre>
+                           </div>
+                           <div class="right-pane">
+                               <pre><code data-external="src/ex-weakptr.out"></code></pre>
+                           </div>
+                       </div>
+                   </section>
+
+                   <section>
+                      <p>How does <code>weak_ptr</code> keep track of things that have been deleted?</p>
+                       <div class="fragment left-pane">
+                           <img alt="weakptr details" style="width:90%;border:0px;" src="src/weakptr.svg">
+                           <p>The control block holds a count of weak references as well as "actual" references</p>
+                           <p>There's one extra weak reference for all the shared references.</p>
+                       </div>
+                       <div class="fragment right-pane">
+                           <img alt="weakptr cleanup details" style="width:90%;border:0px;" src="src/weakptr2.svg">
+                           <p>When all the shared/strong references are gone away, we can delete the shared object and reclaim its memory</p>
+                           <p>When all the weak references are gone away, we can eventually delete the control block</p>
+                       </div>
+                   </section>
+
+                   <section>
+                       <div class="left-pane">
+                          <p class="fragment" data-fragment-index="1" >Beware make_shared and std::weak_ptr!</p>
+                          <pre><code class="fragment cpp" data-external="src/makesharedweak.cc.quoted" data-fragment-index="2" ></code></pre>
+                          <pre><code class="fragment" data-external="src/makesharedweak.out" data-fragment-index="3" ></code></pre>
+                       </div>
+                       <div class="right-pane">
+                          <p class="fragment" data-fragment-index="4" >How might enable_shared_from_this be implemented?</p>
+                          <pre><code class="fragment cpp" data-fragment-index="5" data-external="src/sharedfromthis.h.quoted" data-fragment-index="2" ></code></pre>
+                       </div>
+                   </section>
+
+                </section>
+
+                <section>
+                    <section>
+                       <h2>Some gory details</h2>
+                    </section>
+
+                    <section>
+                        <h2>Thread Safety and shared/weak ptrs</h2>
+                        <ul>
+                            <li>Modifications to reference counts in the control block are atomic.</li>
+                            <li>Multiple threads can, for example, safely copy the same shared_ptr simultaneously</li>
+                            <li>The shared_ptr's themselves, however, are <strong>not</strong> thread-safe: two threads cannot simultaneously modify the same shared_ptr instance</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                       <h2>Deleting objects</h2>
+                       <div class="left-pane">
+                       <pre><code class="cpp" data-external="src/basederived.h.quoted"></code></pre>
+                       </div>
+                       <div class="right-pane">
+                       <pre class="fragment"><code class="cpp" data-external="src/virtual1.cc.quoted"></code></pre>
+                       <pre class="fragment"><code data-external="src/virtual1.out"></code></pre>
+                       <p class="fragment">Confused?</p>
+                       </div>
+                    </section>
+
+                    <section>
+                       <h2>Deleting objects</h2>
+                       <p class="fragment" data-fragment-index="2">For shared ptrs,  it makes sense if things are always destroyed the same way, regardless of who holds the last reference</p>
+                       <div class="left-pane">
+                          <pre class="fragment" data-fragment-index="1"><code class="cpp" data-external="src/virtual2.cc.quoted"></code></pre>
+                          <pre class="fragment" data-fragment-index="3"><code data-external="src/virtual2.out"></code></pre>
+                       </div>
+                       <div class="right-pane">
+                          <pre class="fragment" data-fragment-index="1"><code class="cpp" data-external="src/virtual3.cc.quoted"></code></pre>
+                          <pre class="fragment" data-fragment-index="3"><code data-external="src/virtual3.out"></code></pre>
+                       </div>
+                    </section>
+
+                    <section>
+                       <h2>Deleting objects</h2>
+                       <p> We implement this by having a virtual function to do the work of destroying the object in the control block</p>
+                       <p class="fragment"> We now have a reasonably complete picture of the content of <code>std::shared_ptr</code></p>
+                       <img class="fragment" alt="sharedptr whatgetsdeleted" style="width:100%;height:100%; border:0px;" src="src/sharedptr2.svg">
+                       <p class="fragment">Why use a distinct pointer in the control block here?</p>
+                       <ul style="text-align:left">
+                           <li class="fragment">Mulitple inheritance, and the actual value of "this"</li>
+                           <li class="fragment">make_shared</li>
+                           <li class="fragment">Custom deleters</li>
+                           <li class="fragment">Aliasing constructor</li>
+                       </ul>
+                    </section>
+
+                    <section>
+                       <h2>aliasing constructor</h2>
+                       <div class="left-pane">
+                           <pre><code>
+namespace std {
+   template &lttypename T&gt class shared_ptr {
+      ...
+      template &lt;class Y&gt;
+      shared_ptr (const shared_ptr&lt;Y&gt;&amp; r, T* p)
+                        noexcept;
+      ...
+   };
+}
+                           </code></pre>
+                       </div>
+                       <div class="right-pane">
+                           <img class="fragment" alt="sharedptr whatgetsdeleted" style="width:100%;height:70%; border:0px;" src="src/aliasshared.svg">
+                       </div>
+                    </section>
+
+                    <section>
+                       <h2>aliasing constructor</h2>
+                       <div class="left-pane">
+                          <pre data-fragment-index="3"><code class="cpp" data-external="src/ex-alias.cc.quoted"></code></pre>
+                       </div>
+                       <div class="right-pane">
+                          <pre data-fragment-index="3"><code data-external="src/ex-alias.out"></code></pre>
+                       </div>
+                    </section>
+
+                </section>
+                <section>
+                   <h2>Questions?</h2>
+                </section>
+             </div>
+        </div>
+        <script src="extern/reveal.js/js/reveal.js"></script>
+        <script>
+
+Reveal.initialize({
+    width: '100%',
+    height: '100%',
+    margin: 0,
+    border: 0,
+    slideNumber: 'c/t',
+    dependencies: [
+
+    { src: 'extern/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: 'extern/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'extern/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'extern/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: 'extern/external/external/external.js', condition: function() { return !!document.querySelector( '[data-external]' ); } },
+    { src: 'extern/reveal.js/plugin/notes/notes.js', async: true },
+    { src: 'extern/reveal.js/plugin/zoom-js/zoom.js', async: true },
+
+    ]});
+// if the URL doesn't start with "arista", remove any arista specific elements.
+var url = document.location.href;
+if (url.match("arista$")) {
+} else {
+   aristaOnly = document.getElementsByClassName("arista")
+   var i
+   for (i = 0; i < aristaOnly.length; i++) {
+      aristaOnly[i].parentNode.removeChild(aristaOnly[i]);
+   }
+}
+        </script>
+    </body>
+</html>

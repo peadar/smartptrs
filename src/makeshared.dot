@@ -1,0 +1,24 @@
+digraph G {
+    graph [rankdir = LR,
+          bgcolor=transparent,
+          fontname="monospace"
+    ];
+
+    node[shape=record,
+       fillcolor="#808020",
+       style="filled",
+       fontname="monospace"
+    ];
+
+    shared_ptr[ label="shared_ptr\<Foo\>|{<object>_M_ptr|<control>_M_refcount._M_pi}"]
+    shared_ptr2[ label="shared_ptr\<Foo\>|{<object>_M_ptr|<control>_M_refcount._M_pi}"]
+
+    control[label="_Sp_counted_base\<Foo\> + Foo|{<ctrl>_M_use_count=2|<foo>fields of Foo}"]
+
+    shared_ptr:object -> control:foo;
+    shared_ptr2:object -> control:foo;
+
+    shared_ptr:control -> control:ctrl;
+    shared_ptr2:control -> control:ctrl;
+
+}

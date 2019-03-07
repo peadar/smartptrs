@@ -1,0 +1,39 @@
+.reveal pre {
+    height: 100%;
+    width: 100%;
+}
+
+.reveal {
+    font-size: 300%;
+}
+
+.reveal pre code {
+    max-height: 50em;
+    width: 100%;
+    font-size: 21pt;
+    line-height: 1.2em;
+    opacity: 0.8;
+}
+
+body {
+   background: url("assets/image2.jpg");
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: cover;
+}
+
+div.left-pane {
+    float: left;
+    width: 45%;
+    margin-left: 1em;
+    margin-right: 1em;
+    text-align: left;
+}
+
+div.right-pane {
+    float: right;
+    text-align: left;
+    width: 45%;
+    margin-left: 1em;
+    margin-right: 1em;
+}

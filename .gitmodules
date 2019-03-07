@@ -1,0 +1,6 @@
+[submodule "extern/reveal.js"]
+	path = extern/reveal.js
+	url = https://github.com/hakimel/reveal.js
+[submodule "extern/external"]
+	path = extern/external
+	url = https://github.com/calevans/external
