@@ -1,0 +1,10 @@
+// ex-sharedptr.cc
+
+#include &lt;memory&gt;
+#include &quot;foo.h&quot;
+
+int main() {
+   Foo *f = new Foo();
+   std::shared_ptr&lt;Foo&gt; s1(f);
+   std::shared_ptr&lt;Foo&gt; s2(s1);
+}

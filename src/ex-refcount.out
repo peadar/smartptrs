@@ -1,0 +1,4 @@
+output from ex-refcount 
+
+create Foo@0x55ba72664e70
+destroy Foo@0x55ba72664e70

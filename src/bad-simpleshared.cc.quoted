@@ -1,0 +1,10 @@
+// bad-simpleshared.cc
+
+#include &quot;simpleshared.h&quot;
+#include &quot;foo.h&quot;
+
+int main() {
+   Foo *f = new Foo();
+   SharedPtr&lt;Foo&gt; s1(f);
+   SharedPtr&lt;Foo&gt; s2(f);
+}

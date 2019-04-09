@@ -1,0 +1,28 @@
+#include &lt;memory&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+using namespace std;
+struct Node { };
+struct Tree : enable_shared_from_this&lt;Tree&gt; {
+    Tree() { nodes.emplace_back(); }
+    ~Tree() { cout &lt;&lt; &quot;tree deleted\n&quot;; }
+
+    shared_ptr&lt;Node&gt; getRoot();
+    vector&lt;Node&gt; nodes;
+};
+
+shared_ptr&lt;Node&gt; Tree::getRoot() {
+    return shared_ptr&lt;Node&gt;( shared_from_this(),
+            &amp;nodes.front());
+}
+
+shared_ptr&lt;Node&gt; getTreeRoot() {
+    auto tree = make_shared&lt;Tree&gt;();
+    return tree-&gt;getRoot();
+}
+
+int main() {
+    shared_ptr&lt;Node&gt; node = getTreeRoot();
+    cout &lt;&lt; &quot;we&apos;re out of our tree with node &quot;
+        &lt;&lt; node &lt;&lt; endl;
+}

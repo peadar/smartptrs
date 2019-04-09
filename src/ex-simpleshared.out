@@ -1,0 +1,4 @@
+output from ex-simpleshared 
+
+create Foo@0x561f1a016e70
+delete Foo@0x561f1a016e70

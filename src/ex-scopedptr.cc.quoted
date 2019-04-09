@@ -1,0 +1,11 @@
+// ex-scopedptr.cc
+#include &quot;scopedptr.h&quot;
+#include &quot;foo.h&quot;
+#include &lt;iostream&gt;
+int main() {
+    ScopedPtr&lt;Foo&gt; foop(new Foo());
+    Foo &amp;foor = *foop;
+    ++foor.i;
+    std::clog &lt;&lt; &quot;i is &quot;
+        &lt;&lt; foop-&gt;i &lt;&lt; std::endl;
+}

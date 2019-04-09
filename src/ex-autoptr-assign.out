@@ -1,0 +1,7 @@
+output from ex-autoptr-assign 
+
+create Foo@0x5648f9f90e70
+foo_ap = 0
+foo_ap2 = 0
+foo_ap3 = 0x5648f9f90e70
+delete Foo@0x5648f9f90e70

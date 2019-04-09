@@ -1,0 +1,11 @@
+// virtual3.cc
+
+#include &quot;basederived.h&quot;
+int main(int argc, char *argv[]) {
+   std::shared_ptr&lt;Derived&gt; derived;
+   {
+      std::shared_ptr&lt;Base&gt; base;
+      derived = std::make_shared&lt;Derived&gt;();
+      base = derived;
+   }
+}

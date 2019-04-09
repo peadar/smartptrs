@@ -1,0 +1,19 @@
+  template&lt;typename _Tp&gt;
+    class enable_shared_from_this
+    {
+    ...
+    public:
+      shared_ptr&lt;_Tp&gt;
+      shared_from_this()
+      { return shared_ptr&lt;_Tp&gt;(
+            this-&gt;_M_weak_this);}
+
+      shared_ptr&lt;const _Tp&gt;
+      shared_from_this() const
+      { return shared_ptr&lt;const _Tp&gt;(
+            this-&gt;_M_weak_this); }
+
+    private:
+      ...
+      mutable weak_ptr&lt;_Tp&gt;  _M_weak_this;
+    };

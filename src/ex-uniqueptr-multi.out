@@ -1,0 +1,5 @@
+output from ex-uniqueptr-multi 
+
+create Foo@0x558589990e70
+delete Foo@0x558589990e70
+delete Foo@0x558589990e70

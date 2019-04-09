@@ -1,0 +1,15 @@
+#include &quot;foo.h&quot;
+#include &quot;operatornew.h&quot;
+
+int main() {
+   {
+      std::weak_ptr&lt;Foo&gt; weak;
+      {
+         auto shared = std::make_shared&lt;Foo&gt;();
+         weak = shared;
+      }
+      std::cout &lt;&lt; &quot;shared pointer out of scope\n&quot;;
+   }
+   std::cout &lt;&lt; &quot;weak pointer out of scope\n&quot;;
+
+}

@@ -1,0 +1,25 @@
+// simpleshared.h
+
+struct Refcount {
+   int count = 1;
+};
+
+template &lt;typename T&gt; struct SharedPtr {
+   T *ptr;
+   Refcount *refcount;
+   SharedPtr(T *ptr)
+      : ptr(ptr)
+      , refcount(new Refcount()) {
+   }
+   ~SharedPtr() {
+      if (--refcount-&gt;count == 0) {
+         delete refcount;
+         delete ptr;
+      }
+   }
+   SharedPtr(const SharedPtr&lt;T&gt; &amp;rhs)
+         : ptr(rhs.ptr)
+         , refcount(rhs.refcount) {
+      ++refcount-&gt;count;
+   }
+};

@@ -1,0 +1,5 @@
+output from ex-scopedptr 
+
+create Foo@0x564edb69ae70
+i is 1
+delete Foo@0x564edb69ae70

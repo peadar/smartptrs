@@ -1,0 +1,21 @@
+// ex-shared-from-this.cc
+
+#include &lt;iostream&gt;
+#include &lt;memory&gt;
+struct Foo;
+static void f(const std::shared_ptr&lt;Foo&gt; &amp;foop) {
+    std::cout &lt;&lt; &quot;got a Foo@&quot; &lt;&lt; foop &lt;&lt; std::endl;
+}
+
+struct Foo : std::enable_shared_from_this&lt;Foo&gt; {
+   int i = 0;
+   Foo() { }
+   void m() { f(shared_from_this()); }
+};
+
+int main() {
+    auto sp = std::make_shared&lt;Foo&gt;();
+    sp-&gt;m();
+    Foo *rawp = new Foo();
+    rawp-&gt;m();
+}

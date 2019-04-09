@@ -1,0 +1,18 @@
+// ex-autoptr-assign.cc
+
+#include &lt;memory&gt;
+#include &quot;foo.h&quot;
+int main() {
+   Foo *foo_p = new Foo();
+
+   std::auto_ptr&lt;Foo&gt; foo_ap(foo_p);
+   std::auto_ptr&lt;Foo&gt; foo_ap2(foo_ap);
+   std::auto_ptr&lt;Foo&gt; foo_ap3 = foo_ap2;
+
+   std::cout &lt;&lt; &quot;foo_ap = &quot;
+       &lt;&lt; foo_ap.get() &lt;&lt; std::endl;
+   std::cout &lt;&lt; &quot;foo_ap2 = &quot;
+       &lt;&lt; foo_ap2.get() &lt;&lt; std::endl;
+   std::cout &lt;&lt; &quot;foo_ap3 = &quot;
+       &lt;&lt; foo_ap3.get() &lt;&lt; std::endl;
+}

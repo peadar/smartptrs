@@ -1,0 +1,5 @@
+output from bad-simpleshared 
+
+create Foo@0x5583b8c2fe70
+delete Foo@0x5583b8c2fe70
+delete Foo@0x5583b8c2fe70

@@ -1,0 +1,4 @@
+output from ex-sharedptr 
+
+create Foo@0x55f1e1a50e70
+delete Foo@0x55f1e1a50e70

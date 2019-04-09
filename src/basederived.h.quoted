@@ -1,0 +1,13 @@
+// basederived.h
+
+#include &lt;iostream&gt;
+#include &lt;memory&gt;
+
+struct Base {
+   ~Base() { std::cout &lt;&lt; &quot;~Base()\n&quot;; }
+};
+struct Derived : Base {
+   ~Derived() { std::cout &lt;&lt; &quot;~Derived()-&gt;&quot;; }
+};
+
+

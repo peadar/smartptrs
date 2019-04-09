@@ -1,0 +1,23 @@
+// ex-refcount.cc
+
+#include &quot;refcount.h&quot;
+#include &lt;iostream&gt;
+
+struct Foo : public RefcountedObject {
+   int i = 0;
+   Foo() {
+       std::cout &lt;&lt; &quot;create Foo@&quot;
+           &lt;&lt; this &lt;&lt;std::endl;
+   }
+   ~Foo() {
+       std::cout&lt;&lt;&quot;destroy Foo@&quot;
+           &lt;&lt; this &lt;&lt; std::endl;
+   }
+};
+
+int main() {
+   Foo *foo = new Foo();
+   RefPtr&lt;Foo&gt; foop(foo);
+   RefPtr&lt;Foo&gt; foop2(foo);
+   RefPtr&lt;Foo&gt; foop3 = foop2;
+}

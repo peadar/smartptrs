@@ -1,0 +1,9 @@
+// ex-simpleshared.cc
+
+#include &quot;simpleshared.h&quot;
+#include &quot;foo.h&quot;
+
+int main() {
+   SharedPtr&lt;Foo&gt; s1(new Foo());
+   SharedPtr&lt;Foo&gt; s2(s1);
+}

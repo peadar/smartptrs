@@ -1,0 +1,5 @@
+output from ex-sharedfromthis 
+
+got a Foo@0x563ab0c63e80
+terminate called after throwing an instance of &apos;std::bad_weak_ptr&apos;
+  what():  bad_weak_ptr

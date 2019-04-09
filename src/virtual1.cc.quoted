@@ -1,0 +1,6 @@
+#include &quot;basederived.h&quot;
+
+int main(int argc, char *argv[]) {
+   std::shared_ptr&lt;Base&gt; sbase( new Derived() );
+   std::unique_ptr&lt;Base&gt; ubase( new Derived() );
+}

@@ -1,0 +1,8 @@
+output from ex-makeshared 
+
+allocate 4 bytes at 0x56072d16ce70
+create Foo@0x56072d16ce70
+allocate 24 bytes at 0x56072d16dea0
+delete Foo@0x56072d16ce70
+free bytes at 0x56072d16ce70
+free bytes at 0x56072d16dea0

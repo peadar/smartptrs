@@ -1,0 +1,4 @@
+output from virtual1 
+
+~Base()
+~Derived()-&gt;~Base()

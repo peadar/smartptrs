@@ -1,0 +1,6 @@
+output from ex-weakptr 
+
+create Foo@0x5654c0b4ce80
+converted weak to shared: 0x5654c0b4ce80
+delete Foo@0x5654c0b4ce80
+converted weak to shared: 0

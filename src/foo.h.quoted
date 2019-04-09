@@ -1,0 +1,14 @@
+// foo.h
+
+#include &lt;iostream&gt;
+struct Foo {
+   int i = 0;
+   Foo(){
+       std::cout&lt;&lt; &quot;create Foo@&quot; &lt;&lt; this
+           &lt;&lt; std::endl;
+   }
+   ~Foo(){
+       std::cout&lt;&lt; &quot;delete Foo@&quot; &lt;&lt;this
+           &lt;&lt;std::endl;
+   }
+};

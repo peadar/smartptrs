@@ -1,0 +1,7 @@
+ex-uniqueptr-assign.cc:8:25: error: call to deleted constructor of &apos;std::unique_ptr&lt;Foo&gt;&apos;
+   std::unique_ptr&lt;Foo&gt; foo_ap2(foo_ap);
+                        ^       ~~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/bits/unique_ptr.h:394:7: note: &apos;unique_ptr&apos; has been explicitly marked deleted here
+      unique_ptr(const unique_ptr&amp;) = delete;
+      ^
+1 error generated.

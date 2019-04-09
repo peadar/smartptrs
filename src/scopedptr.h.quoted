@@ -1,0 +1,10 @@
+// scopedptr.h
+
+template&lt;typename T&gt; class ScopedPtr {
+    T *ptr;
+public:
+    ScopedPtr(T *ptr) : ptr(ptr) {}
+    ~ScopedPtr() { delete ptr; }
+    T *operator -&gt; () { return ptr; }
+    T &amp;operator * () { return *ptr; }
+};

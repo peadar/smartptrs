@@ -1,0 +1,8 @@
+output from makesharedweak 
+
+allocate 24 bytes at 0x55ee4d398e70
+create Foo@0x55ee4d398e80
+delete Foo@0x55ee4d398e80
+shared pointer out of scope
+free bytes at 0x55ee4d398e70
+weak pointer out of scope

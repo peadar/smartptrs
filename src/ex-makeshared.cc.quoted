@@ -1,0 +1,7 @@
+// ex-makeshared.cc
+
+#include &quot;operatornew.h&quot;
+#include &quot;foo.h&quot;
+int main() {
+   std::shared_ptr&lt;Foo&gt; p(new Foo());
+}

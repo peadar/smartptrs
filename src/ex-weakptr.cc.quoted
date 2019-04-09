@@ -1,0 +1,18 @@
+#include &quot;foo.h&quot;
+#include &lt;memory&gt;
+
+void test_weak(const std::weak_ptr&lt;Foo&gt; &amp;weak) {
+    std::shared_ptr&lt;Foo&gt; shared = weak.lock();
+    std::cout &lt;&lt; &quot;converted weak to shared: &quot;
+        &lt;&lt; shared &lt;&lt; std::endl;
+}
+
+int main() {
+    std::weak_ptr&lt;Foo&gt; weak;
+    {
+        auto shared = std::make_shared&lt;Foo&gt;();
+        weak = shared;
+        test_weak(weak);
+    }
+    test_weak(weak);
+}

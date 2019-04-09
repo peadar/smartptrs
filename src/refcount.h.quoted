@@ -1,0 +1,24 @@
+// refcount.h
+#include &lt;type_traits&gt;
+#include &lt;iostream&gt;
+struct RefcountedObject {
+    int refcount = 0;
+};
+template &lt;typename T, typename = typename
+        std::enable_if&lt;
+            std::is_base_of&lt;RefcountedObject,T&gt;
+            ::value&gt;::type&gt;
+class RefPtr {
+    T *ptr;
+public:
+   RefPtr(T *ptr) : ptr(ptr) {
+       ++ptr-&gt;refcount;
+   }
+   ~RefPtr() {
+       if (--ptr-&gt;refcount == 0) delete ptr;
+   }
+   T *operator -&gt; () { return ptr; }
+   T &amp;operator * () { return *ptr; }
+   RefPtr(const RefPtr&lt;T&gt; &amp;rhs)
+      : ptr(rhs.ptr) { ++ptr-&gt;refcount; }
+};

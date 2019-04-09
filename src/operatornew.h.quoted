@@ -1,0 +1,13 @@
+// operatornew.h
+#include &lt;memory&gt;
+#include &lt;iostream&gt;
+void *operator new (std::size_t size) {
+   void *p = std::malloc(size);
+   std::cerr &lt;&lt; &quot;allocate &quot; &lt;&lt; size &lt;&lt; &quot; bytes at &quot;
+      &lt;&lt; p &lt;&lt; std::endl;
+   return p;
+}
+void operator delete (void *p) {
+   std::cerr &lt;&lt; &quot;free bytes at &quot; &lt;&lt; p &lt;&lt; std::endl;
+   std::free(p);
+}

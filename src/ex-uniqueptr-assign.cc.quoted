@@ -1,0 +1,9 @@
+// ex-uniqueptr-assign.cc
+
+#include &lt;memory&gt;
+#include &quot;foo.h&quot;
+int main() {
+   Foo *foo_p = new Foo();
+   std::unique_ptr&lt;Foo&gt; foo_ap(foo_p);
+   std::unique_ptr&lt;Foo&gt; foo_ap2(foo_ap);
+}
